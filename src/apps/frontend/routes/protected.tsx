@@ -3,7 +3,9 @@ import { Outlet } from 'react-router-dom';
 
 import routes from '../constants/routes';
 import { TaskProvider, useAccountContext } from '../contexts';
+import { SharedTaskProvider } from '../contexts/shared-task.provider';
 import { Dashboard, NotFound, Tasks } from '../pages';
+import SharedTasks from '../pages/shared-tasks';
 import AppLayout from '../pages/app-layout/app-layout';
 
 const App = () => {
@@ -33,6 +35,14 @@ export const protectedRoutes = [
           <TaskProvider>
             <Tasks />
           </TaskProvider>
+        ),
+      },
+      {
+        path: routes.SHARED_TASKS,
+        element: (
+          <SharedTaskProvider>
+            <SharedTasks />
+          </SharedTaskProvider>
         ),
       },
       { path: '*', element: <NotFound /> },

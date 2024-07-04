@@ -18,6 +18,7 @@ import TaskModal from './task-modal';
 import useTaskForm from './tasks-form.hook';
 import CommentList from './comment-list';
 import AddComment from './add-comment';
+import ShareTaskModal from './share-task-modal';
 
 interface TaskSectionProps {
   handleDeleteTask: (taskId: string) => void;
@@ -33,6 +34,8 @@ const TaskSection: React.FC<TaskSectionProps> = ({
   tasks,
 }) => {
   const [updateTaskModal, setUpdateTaskModal] = useState(false);
+  const [shareTaskModal, setShareTaskModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
   const onSuccess = () => {
@@ -50,6 +53,11 @@ const TaskSection: React.FC<TaskSectionProps> = ({
     setFormikFieldValue(updateTaskFormik, 'title', task.title);
     setFormikFieldValue(updateTaskFormik, 'id', task.id);
     setFormikFieldValue(updateTaskFormik, 'description', task.description);
+  };
+
+  const handleShareTask = (task: Task) => {
+    setSelectedTask(task);
+    setShareTaskModal(true);
   };
 
   if (isGetTasksLoading) {
@@ -110,6 +118,16 @@ const TaskSection: React.FC<TaskSectionProps> = ({
               >
                 Delete
               </Button>
+              <Button
+                onClick={() => handleShareTask(task)}
+                kind={ButtonKind.SECONDARY}
+                size={ButtonSize.DEFAULT}
+                startEnhancer={
+                  <img src="assets/svg/share-icon.svg" alt="Share task" />
+                }
+              >
+                Share
+              </Button>
             </MenuItem>
           </div>
         </div>
@@ -121,6 +139,14 @@ const TaskSection: React.FC<TaskSectionProps> = ({
         setIsModalOpen={setUpdateTaskModal}
         btnText={'Update Task'}
       />
+
+      {selectedTask && (
+        <ShareTaskModal
+          isModalOpen={shareTaskModal}
+          setIsModalOpen={setShareTaskModal}
+          task={selectedTask}
+        />
+      )}
     </VerticalStackLayout>
   );
 };
