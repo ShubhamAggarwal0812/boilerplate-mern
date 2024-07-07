@@ -1,13 +1,30 @@
 import { ApplicationError } from '../application';
 import { HttpStatusCodes } from '../http';
+import { Account } from '../account/types';
 
 export class Comment {
-  id!: string;
-  task!: string;
-  account!: any;
-  comment!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
+  id: string;
+  task: string;
+  account: string | Account;
+  comment: string;
+  createdAt: Date;
+  updatedAt: Date;
+
+  constructor(
+    id: string,
+    task: string,
+    account: string | Account,
+    comment: string,
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
+    this.id = id;
+    this.task = task;
+    this.account = account;
+    this.comment = comment;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
 }
 
 export interface CreateCommentParams {

@@ -14,8 +14,8 @@ export default class CommentService extends APIService {
         localStorage.getItem('access-token'),
       ) as AccessToken;
       const response = await this.apiClient.post(
-        `/comments`,
-        { taskId, comment },
+        `/tasks/${taskId}/comments`,
+        { comment },
         {
           headers: {
             Authorization: `Bearer ${userAccessToken.token}`,
@@ -39,7 +39,7 @@ export default class CommentService extends APIService {
       const userAccessToken = JSON.parse(
         localStorage.getItem('access-token'),
       ) as AccessToken;
-      const response = await this.apiClient.get(`/comments/${taskId}`, {
+      const response = await this.apiClient.get(`/tasks/${taskId}/comments`, {
         headers: {
           Authorization: `Bearer ${userAccessToken.token}`,
         },
@@ -66,8 +66,8 @@ export default class CommentService extends APIService {
         localStorage.getItem('access-token'),
       ) as AccessToken;
       const response = await this.apiClient.put(
-        `/comments/${commentId}`,
-        { taskId, comment },
+        `/tasks/${taskId}/comments/${commentId}`,
+        { comment },
         {
           headers: {
             Authorization: `Bearer ${userAccessToken.token}`,
@@ -86,12 +86,15 @@ export default class CommentService extends APIService {
     }
   };
 
-  deleteComment = async (commentId: string): Promise<ApiResponse<void>> => {
+  deleteComment = async (
+    taskId: string,
+    commentId: string,
+  ): Promise<ApiResponse<void>> => {
     try {
       const userAccessToken = JSON.parse(
         localStorage.getItem('access-token'),
       ) as AccessToken;
-      await this.apiClient.delete(`/comments/${commentId}`, {
+      await this.apiClient.delete(`/tasks/${taskId}/comments/${commentId}`, {
         headers: {
           Authorization: `Bearer ${userAccessToken.token}`,
         },

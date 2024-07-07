@@ -15,7 +15,7 @@ export class CommentController {
   createComment = applicationController(
     async (req: Request<CreateCommentParams>, res: Response) => {
       const comment: Comment = await CommentService.createComment({
-        taskId: req.body.taskId,
+        taskId: req.params.taskId,
         accountId: req.accountId,
         comment: req.body.comment,
       });
@@ -54,7 +54,7 @@ export class CommentController {
       const updatedComment: Comment = await CommentService.updateComment({
         accountId: req.accountId,
         commentId: req.params.id,
-        taskId: req.body.taskId,
+        taskId: req.params.taskId,
         comment: req.body.comment,
       });
       const commentJSON = serializeCommentAsJSON(updatedComment);

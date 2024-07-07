@@ -30,7 +30,7 @@ const CommentList: React.FC<CommentListProps> = ({ taskId }) => {
   }, [taskId]);
 
   const handleDeleteComment = (commentId: string) => {
-    deleteComment(commentId)
+    deleteComment(taskId, commentId)
       .then(() => {
         setCommentsList(
           commentsList.filter((comment) => comment.id !== commentId),

@@ -14,7 +14,7 @@ import useAsync from './async.hook';
 type CommentContextType = {
   addComment: (taskId: string, comment: string) => Promise<Comment>;
   addCommentError: AsyncError;
-  deleteComment: (commentId: string) => Promise<void>;
+  deleteComment: (taskId: string, commentId: string) => Promise<void>;
   deleteCommentError: AsyncError;
   getComments: (taskId: string) => Promise<Comment[]>;
   getCommentsError: AsyncError;
@@ -58,9 +58,10 @@ const updateCommentFn = async (
 };
 
 const deleteCommentFn = async (
+  taskId: string,
   commentId: string,
 ): Promise<ApiResponse<void>> => {
-  return commentService.deleteComment(commentId);
+  return commentService.deleteComment(taskId, commentId);
 };
 
 export const CommentProvider: React.FC<PropsWithChildren> = ({ children }) => {

@@ -19,6 +19,7 @@ export default class CommentWriter {
         task: params.taskId,
         account: params.accountId,
         comment: params.comment,
+        active: true,
       })
     ).populate({
       path: 'account',
@@ -35,6 +36,7 @@ export default class CommentWriter {
         task: params.taskId,
         account: params.accountId,
         _id: params.commentId,
+        active: true,
       },
       {
         $set: {
@@ -61,9 +63,15 @@ export default class CommentWriter {
       accountId: params.accountId,
       commentId: params.commentId,
     });
-
-    await CommentRepository.findOneAndDelete({
-      _id: comment.id,
-    });
+    await CommentRepository.findOneAndUpdate(
+      {
+        _id: comment.id,
+      },
+      {
+        $set: {
+          active: false,
+        },
+      },
+    );
   }
 }

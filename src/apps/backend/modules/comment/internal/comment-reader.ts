@@ -9,6 +9,7 @@ export default class CommentReader {
     const commentDb = await CommentRepository.findOne({
       _id: params.commentId,
       account: params.accountId,
+      active: true,
     });
 
     if (!commentDb) {
@@ -19,7 +20,10 @@ export default class CommentReader {
   }
 
   public static async getCommentsForTask(taskId: string): Promise<Comment[]> {
-    const commentsDb = await CommentRepository.find({ task: taskId })
+    const commentsDb = await CommentRepository.find({
+      task: taskId,
+      active: true,
+    })
       .populate({
         path: 'account',
         model: 'accounts',
