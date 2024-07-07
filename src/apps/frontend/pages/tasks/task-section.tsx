@@ -16,6 +16,8 @@ import { Task } from '../../types/task';
 
 import TaskModal from './task-modal';
 import useTaskForm from './tasks-form.hook';
+import CommentList from './comment-list';
+import AddComment from './add-comment';
 
 interface TaskSectionProps {
   handleDeleteTask: (taskId: string) => void;
@@ -31,6 +33,7 @@ const TaskSection: React.FC<TaskSectionProps> = ({
   tasks,
 }) => {
   const [updateTaskModal, setUpdateTaskModal] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
   const onSuccess = () => {
     toast.success('Task has been updated successfully');
@@ -74,6 +77,15 @@ const TaskSection: React.FC<TaskSectionProps> = ({
           <VerticalStackLayout gap={3}>
             <LabelLarge>{task.title}</LabelLarge>
             <ParagraphSmall>{task.description}</ParagraphSmall>
+            <Button onClick={() => setSelectedTaskId(task.id)}>
+              View Comments
+            </Button>
+            {selectedTaskId === task.id && (
+              <div>
+                <AddComment taskId={task.id} />
+                <CommentList taskId={task.id} />
+              </div>
+            )}
           </VerticalStackLayout>
 
           <div className="absolute right-4 top-4">
