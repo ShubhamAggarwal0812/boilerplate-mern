@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { AccountProvider, AuthProvider } from './contexts';
 import { CommentProvider } from './contexts/comment.provider';
+import { SharedTaskProvider } from './contexts/shared-task.provider';
 import { Config } from './helpers';
 import { AppRoutes } from './routes';
 import InspectLet from './vendor/inspectlet';
@@ -21,10 +22,12 @@ export default function App(): React.ReactElement {
     <AuthProvider>
       <AccountProvider>
         <CommentProvider>
-          <Toaster />
-          <Router>
-            <AppRoutes />
-          </Router>
+          <SharedTaskProvider>
+            <Toaster />
+            <Router>
+              <AppRoutes />
+            </Router>
+          </SharedTaskProvider>
         </CommentProvider>
       </AccountProvider>
     </AuthProvider>

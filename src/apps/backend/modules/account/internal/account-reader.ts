@@ -6,15 +6,15 @@ import {
   InvalidCredentialsError,
   Nullable,
   PhoneNumber,
+  GetAllAccountsParams,
+  PaginationParams,
 } from '../types';
 
 import AccountUtil from './account-util';
 import AccountRepository from './store/account-repository';
 
 export default class AccountReader {
-  public static async getAccountByUsername(
-    username: string,
-  ): Promise<Account> {
+  public static async getAccountByUsername(username: string): Promise<Account> {
     const accountDb = await AccountRepository.findOne({
       username,
       active: true,
@@ -42,9 +42,7 @@ export default class AccountReader {
     return account;
   }
 
-  public static async getAccountById(
-    accountId: string,
-  ): Promise<Account> {
+  public static async getAccountById(accountId: string): Promise<Account> {
     const accountDb = await AccountRepository.findOne({
       _id: accountId,
       active: true,
@@ -113,5 +111,30 @@ export default class AccountReader {
     }
 
     return false;
+  }
+
+  public static async getAllAccounts(
+    params: GetAllAccountsParams,
+  ): Promise<Account[]> {
+    const paginationParams: PaginationParams = {
+      page: params.page || 1,
+      size: params.size || 10,
+    };
+    const startIndex = (paginationParams.page - 1) * paginationParams.size;
+
+    const accountsDb = await AccountRepository.find({
+      active: true,
+      $or: [
+        { firstName: { $regex: params.search, $options: 'i' } },
+        { lastName: { $regex: params.search, $options: 'i' } },
+        { username: { $regex: params.search, $options: 'i' } },
+      ],
+    })
+      .limit(paginationParams.size)
+      .skip(startIndex);
+
+    return accountsDb.map((accountDb) =>
+      AccountUtil.convertAccountDBToAccount(accountDb),
+    );
   }
 }

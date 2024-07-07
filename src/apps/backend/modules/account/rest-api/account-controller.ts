@@ -7,6 +7,7 @@ import {
   CreateAccountParamsByPhoneNumber,
   CreateAccountParamsByUsernameAndPassword,
   GetAccountParams,
+  GetAllAccountsParams,
   PhoneNumber,
   ResetPasswordParams,
   UpdateAccountDetailsParams,
@@ -19,15 +20,9 @@ export class AccountController {
   createAccount = applicationController(
     async (req: Request<CreateAccountParams>, res: Response) => {
       let account: Account;
-      const {
-        firstName,
-        lastName,
-        password,
-        username,
-      } = req.body as CreateAccountParamsByUsernameAndPassword;
-      const {
-        phoneNumber,
-      } = req.body as CreateAccountParamsByPhoneNumber;
+      const { firstName, lastName, password, username } =
+        req.body as CreateAccountParamsByUsernameAndPassword;
+      const { phoneNumber } = req.body as CreateAccountParamsByPhoneNumber;
 
       if (username && password) {
         account = await AccountService.createAccountByUsernameAndPassword(
@@ -63,15 +58,9 @@ export class AccountController {
     async (req: Request<UpdateAccountParams>, res: Response) => {
       const { accountId } = req.params;
       let account: Account;
-      const {
-        firstName,
-        lastName,
-      } = req.body as UpdateAccountDetailsParams;
+      const { firstName, lastName } = req.body as UpdateAccountDetailsParams;
 
-      const {
-        newPassword,
-        token,
-      } = req.body as ResetPasswordParams;
+      const { newPassword, token } = req.body as ResetPasswordParams;
 
       if (newPassword && token) {
         account = await AccountService.resetAccountPassword({
@@ -90,6 +79,22 @@ export class AccountController {
       const accountJSON = serializeAccountAsJSON(account);
 
       res.status(HttpStatusCodes.OK).send(accountJSON);
+    },
+  );
+
+  getAllAccounts = applicationController(
+    async (req: Request, res: Response) => {
+      const search = req.query.search as string;
+      const page = +(req.query.page as string) || 1;
+      const size = +(req.query.size as string) || 10;
+
+      const params: GetAllAccountsParams = { search, page, size };
+      const accounts = await AccountService.getAllAccounts(params);
+      const accountsJSON = accounts.map((account) =>
+        serializeAccountAsJSON(account),
+      );
+
+      res.status(HttpStatusCodes.OK).send(accountsJSON);
     },
   );
 }
