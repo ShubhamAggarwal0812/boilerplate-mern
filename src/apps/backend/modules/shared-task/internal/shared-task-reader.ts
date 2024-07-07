@@ -17,6 +17,7 @@ export default class SharedTaskReader {
     })
       .populate({
         path: 'task',
+        match: { active: true },
         populate: {
           path: 'account',
           model: 'accounts',
@@ -24,7 +25,7 @@ export default class SharedTaskReader {
       })
       .exec();
 
-    if (!sharedTaskDb) {
+    if (!sharedTaskDb || !sharedTaskDb.task) {
       throw new SharedTaskNotFoundError(params.sharedTaskId);
     }
 
@@ -39,6 +40,7 @@ export default class SharedTaskReader {
     })
       .populate({
         path: 'task',
+        match: { active: true },
         populate: {
           path: 'account',
           model: 'accounts',
@@ -46,8 +48,10 @@ export default class SharedTaskReader {
       })
       .exec();
 
-    return sharedTasksDb.map((sharedTaskDb) =>
-      SharedTaskUtil.convertSharedTaskDBToSharedTask(sharedTaskDb),
-    );
+    return sharedTasksDb
+      .filter((sharedTaskDb) => sharedTaskDb.task)
+      .map((sharedTaskDb) =>
+        SharedTaskUtil.convertSharedTaskDBToSharedTask(sharedTaskDb),
+      );
   }
 }

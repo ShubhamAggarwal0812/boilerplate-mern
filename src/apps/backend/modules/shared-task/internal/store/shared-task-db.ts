@@ -4,6 +4,7 @@ export interface SharedTaskDB {
   _id: Types.ObjectId;
   task: Types.ObjectId;
   account: Types.ObjectId;
+  active: boolean;
 }
 
 export const SharedTaskDbSchema: Schema = new Schema<SharedTaskDB>(
@@ -19,6 +20,10 @@ export const SharedTaskDbSchema: Schema = new Schema<SharedTaskDB>(
       ref: 'Account',
       index: true,
       required: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
     },
   },
   {

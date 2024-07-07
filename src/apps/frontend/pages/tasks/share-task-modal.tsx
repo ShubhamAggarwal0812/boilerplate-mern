@@ -66,7 +66,6 @@ const ShareTaskModal: React.FC<ShareTaskModalProps> = ({
       toast.success('Task shared successfully');
       closeModal();
     } catch (error) {
-      console.log('ERROR', error);
       toast.error('Failed to share task');
     }
   };
@@ -120,21 +119,26 @@ const ShareTaskModal: React.FC<ShareTaskModalProps> = ({
             error={error ? error : ''}
           />
         </FormControl>
-        <div className="account-list">
+        <div className="account-list space-y-2">
           {isLoading ? (
             <div>Loading...</div>
           ) : accounts.length === 0 ? (
             <div>No accounts match your search</div>
           ) : (
             accounts.map((account) => (
-              <div key={account.id}>
-                <label>
+              <div
+                key={account.id}
+                className="flex items-center space-x-3 p-2 border rounded-md"
+              >
+                <label className="flex items-center space-x-2">
                   <input
                     type="checkbox"
                     checked={selectedAccounts.includes(account.id)}
                     onChange={() => handleAccountSelect(account.id)}
                   />
-                  {account.firstName} {account.lastName} ({account.username})
+                  <span>
+                    {account.firstName} {account.lastName} ({account.username})
+                  </span>
                 </label>
               </div>
             ))

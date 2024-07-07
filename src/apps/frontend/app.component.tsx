@@ -23,8 +23,6 @@ export default function App(): React.ReactElement {
       <AccountProvider>
         <CommentProvider>
           <SharedTaskProvider>
-            {' '}
-            {/* Add this provider */}
             <Toaster />
             <Router>
               <AppRoutes />
